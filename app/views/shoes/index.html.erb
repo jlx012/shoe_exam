@@ -1,0 +1,33 @@
+<div class="col-6">
+    <h1>Hi <%= current_user.first_name.titleize %></h1>
+    <a href="/logout" data-method="delete">Logout</a>
+    <a href="dashboard/<%= current_user.id %>">Dashboard</a>
+
+    <h2>All Products</h2>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Seller</th>
+                <th>Date Posted</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @all_shoes.each do |shoe| %>
+                <% if shoe.user_id != current_user.id %>
+                    <% unless @all_sales.include? shoe %>
+                        <tr>
+                            <td> <%= shoe.name.titleize %> </td>
+                            <td> <%= shoe.user.first_name.titleize %> <%= shoe.user.last_name.titleize %>  </td>
+                            <td> <%= shoe.created_at %> </td>
+                            <td> <%= shoe.price %> </td>
+                            <td><a href="shoes/<%= shoe.id %>/buy">Buy</a></td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            <% end %>
+        </tbody>
+    </table>
+</div>

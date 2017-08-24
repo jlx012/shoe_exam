@@ -1,0 +1,93 @@
+<div class="col-7">
+    <a href="/shoes">Go to All Products</a>
+    <a href="/logout" data-method="delete">Logout</a>
+
+    <h1>Hi <%= current_user.first_name.titleize %></h1>
+
+    <h3>Sell Product</h3>
+    <div class="col-3">
+        <form action="/shoes" method="post">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+
+            <label for="name">Name:</label>
+            <input type='text' name="shoe[name]" class="form-control">
+
+            <label for="price">Price:</label>
+            <input type="number" min='1' step='0.01' name='shoe[price]' class='form-control'>
+
+            <button type="submit" class="btn btn-primary">Set</button>
+        </form>
+    </div>
+    <h2>Your Products that are not yet sold:</h2>
+        <table class='table'>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Date Posted</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @all_shoes.each do |shoe| %>
+                    <% if shoe.user_id == current_user.id %>
+                        <% unless @alll_sales.include? shoe %>
+                                <tr>
+                                    <td> <%= shoe.name.titleize %> </td>
+                                    <td> <%= shoe.created_at %> </td>
+                                    <td> <%= shoe.price %> </td>
+                                    <td><a href='/destroy/<%= shoe.id %>' data-method="delete">Remove</a></td>
+                                </tr>
+                        <% end %>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    <h2>Sales</h2>
+        <table class='table'>
+            <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Date Posted</th>
+                  <th>Buyer</th>
+                  <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @all_sales.each do |sale| %>
+                    <% if sale.shoe.user_id == current_user.id %>
+                          <tr>
+                              <td> <%= sale.shoe.name.titleize %> </td>
+                              <td> <%= sale.created_at %> </td>
+                              <td> <%= sale.user.first_name.titleize %> <%= sale.user.last_name.titleize %> </td>
+                              <td> <%= sale.shoe.price %> </td>
+                          </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    <h2>Purchases</h2>
+        <table class='table'>
+            <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Date Posted</th>
+                  <th>Seller</th>
+                  <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @all_sales.each do |sale| %>
+                    <% if sale.user_id == current_user.id %>
+                          <tr>
+                              <td> <%= sale.shoe.name.titleize %> </td>
+                              <td> <%= sale.created_at %> </td>
+                              <td> <%= sale.shoe.user.first_name.titleize %> <%= sale.shoe.user.last_name.titleize %>  </td>
+                              <td> <%= sale.shoe.price %> </td>
+                          </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+
+  </div>
